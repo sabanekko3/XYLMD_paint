@@ -12,11 +12,16 @@ def print_port_input():
     t.start()
 
 class XYPaint:
-    def __init__(self,port):
+    def __init__(self,port,x_max = 100.0,y_max = 100.0):
+        self.port = port
+        self.x_max = x_max
+        self.y_max = y_max
 
+        self.port.servo_init(0.15)
+        self.port.set_power(0.15,0.15)
+        
         self.is_writing = False
 
-        self.port = port
         # 操作中の図形のID
         self.curr_id = -1
         
@@ -72,11 +77,12 @@ class XYPaint:
     def clear_canvas(self, event):
         self.canvas.delete("all")
 
+
 if __name__ == '__main__':
     with can.interface.Bus('COM14@115200',bustype='slcan',bitrate=1000000) as bus:
         canIF = command_if.CommandIF(bus)
-        canIF.servo_init(0.15)
-        canIF.set_power(0.15,0.15)
+
         t=threading.Thread(target=print_port_input)
         t.start()
+
         XYPaint(canIF)
