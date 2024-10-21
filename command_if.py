@@ -12,20 +12,23 @@ class CommandIF:
         msg = can.Message(arbitration_id = id,data = data)
         self.bus.send(msg)
 
+    def set_origin_xy(self):
+        self.send_params(rm.LMMDCommand.SET_ORIGIN,0,0)
+
     def move_xy(self,x,y):
-        self.send_params(rm.LMMDReg.POS,x,y)
+        self.send_params(rm.LMMDCommand.TARGET_POS,x,y)
 
     def set_power(self,x_power,y_power):
-        self.send_params(rm.LMMDReg.POWER,x_power,y_power)
+        self.send_params(rm.LMMDCommand.POWER,x_power,y_power)
 
     def set_p_gain(self,x_p,y_p):
-        self.send_params(rm.LMMDReg.GAIN_P,x_p,y_p)
+        self.send_params(rm.LMMDCommand.GAIN_P,x_p,y_p)
     
     def set_i_gain(self,x_i,y_i):
-        self.send_params(rm.LMMDReg.GAIN_I,x_i,y_i)
+        self.send_params(rm.LMMDCommand.GAIN_I,x_i,y_i)
     
     def set_d_gain(self,x_d,y_d):
-        self.send_params(rm.LMMDReg.GAIN_D,x_d,y_d)
+        self.send_params(rm.LMMDCommand.GAIN_D,x_d,y_d)
 
     def servo_init(self,pos):
         msg = can.Message(arbitration_id = rm.GPIO_BASE_ID | rm.GPIOReg.PORT_MODE,is_extended_id=True,data=dc.int_to_int_list(int_value = 0b0,dlc = 2))

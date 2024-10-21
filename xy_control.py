@@ -2,6 +2,7 @@ import tkinter
 import threading
 import can
 import command_if
+import time
 
 def print_port_input():
     recv_msg = canIF.bus.recv()
@@ -17,8 +18,19 @@ class XYPaint:
         self.x_max = x_max
         self.y_max = y_max
 
+        #モータ初期設定
         self.port.servo_init(0.15)
-        self.port.set_power(0.15,0.15)
+        time.sleep(0.1)
+        self.port.set_origin_xy()
+        time.sleep(0.1)
+        self.port.set_p_gain(0.0001, 0.0001)
+        time.sleep(0.1)
+        self.port.set_i_gain(0.0001, 0.0001)
+        time.sleep(0.1)
+        self.port.set_d_gain(0.000000, 0.000000)
+        time.sleep(0.1)
+        self.port.set_power(2,2)
+        time.sleep(0.1)
         
         self.is_writing = False
 
@@ -50,12 +62,14 @@ class XYPaint:
         self.curr_id = self.canvas.create_line(event.x, event.y, event.x, event.y,
             fill = "black",width = 1)
         self.is_writing = True
-        self.port.move_servo(0.15)
+        for i in range(10):
+            self.port.move_servo(0.15)
     
     # マウス左ボタン解放
     def off_key_left(self, event):
         self.is_writing = False
-        self.port.move_servo(0)
+        for i in range(10):
+            self.port.move_servo(0)
  
    # ドラッグ中
     def dragging(self, event):
@@ -81,6 +95,7 @@ class XYPaint:
 if __name__ == '__main__':
     with can.interface.Bus('COM14@115200',bustype='slcan',bitrate=1000000) as bus:
         canIF = command_if.CommandIF(bus)
+        time.sleep(1)
 
         t=threading.Thread(target=print_port_input)
         t.start()

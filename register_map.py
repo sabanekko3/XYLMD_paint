@@ -14,9 +14,10 @@ class GPIOReg(enum.IntEnum):
     MONITOR_PERIOD = 0xF0
     MONITOR_REG = 0xF1
 
-class LMMDReg(enum.IntEnum):
-    POS = 0x0
-    POWER = 0x1
-    GAIN_P = 0x2
-    GAIN_I = 0x3
-    GAIN_D = 0x4
+class LMMDCommand(enum.IntEnum):
+    SET_ORIGIN = 0x0
+    TARGET_POS = 0x1
+    POWER = 0x2
+    GAIN_P = 0x3
+    GAIN_I = 0x4
+    GAIN_D = 0x5
